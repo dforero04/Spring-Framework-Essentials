@@ -1,0 +1,5 @@
+/Users/dforero/Spring Courses/Spring Project/core-spring-labfiles/lab/42-security-rest/src/test/java/accounts/services/AccountServiceMethodSecurityTest.java
+/Users/dforero/Spring Courses/Spring Project/core-spring-labfiles/lab/42-security-rest/src/test/java/accounts/client/AccountClientTests.java
+/Users/dforero/Spring Courses/Spring Project/core-spring-labfiles/lab/42-security-rest/src/test/java/accounts/web/AccountControllerCustomUserDetailsServiceTests.java
+/Users/dforero/Spring Courses/Spring Project/core-spring-labfiles/lab/42-security-rest/src/test/java/accounts/web/AccountControllerTests.java
+/Users/dforero/Spring Courses/Spring Project/core-spring-labfiles/lab/42-security-rest/src/test/java/accounts/web/AccountControllerCustomAuthenticationProviderTests.java
