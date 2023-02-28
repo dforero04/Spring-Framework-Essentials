@@ -1,7 +1,9 @@
 package rewards;
 
+import config.RewardsConfig;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
 import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
 
 import javax.sql.DataSource;
@@ -52,7 +54,16 @@ import javax.sql.DataSource;
  * - If your test fails - did you miss the import in TO DO 7 above?
  *
  */
+
+/*
+	This config file, as it states, is a partitioned version of the config file that deals with Infrastructure.
+
+	Explanation: This config file, as well as RewardsConfig.java, are used as the Application Context for the
+	application. They are partitioned out due to separation of concerns. This config file imports the RewardsConfig file,
+	and then used as the Application context for test purposes. The test file is named RewardNetworkTests.java.
+ */
 @Configuration
+@Import(RewardsConfig.class)
 public class TestInfrastructureConfig {
 
 	/**

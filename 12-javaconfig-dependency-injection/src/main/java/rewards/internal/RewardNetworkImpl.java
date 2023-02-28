@@ -14,10 +14,10 @@ import common.money.MonetaryAmount;
 
 /**
  * Rewards an Account for Dining at a Restaurant.
- * 
+ *
  * The sole Reward Network implementation. This object is an application-layer service responsible for coordinating with
  * the domain-layer to carry out the process of rewarding benefits to accounts for dining.
- * 
+ *
  * Said in other words, this class implements the "reward account for dining" use case.
  */
 public class RewardNetworkImpl implements RewardNetwork {
@@ -47,6 +47,7 @@ public class RewardNetworkImpl implements RewardNetwork {
 		MonetaryAmount amount = restaurant.calculateBenefitFor(account, dining);
 		AccountContribution contribution = account.makeContribution(amount);
 		accountRepository.updateBeneficiaries(account);
+		
 		return rewardRepository.confirmReward(contribution, dining);
 	}
 }
