@@ -1,18 +1,22 @@
 package rewards.internal;
 
+import common.money.MonetaryAmount;
+import rewards.AccountContribution;
 import rewards.Dining;
 import rewards.RewardConfirmation;
 import rewards.RewardNetwork;
+import rewards.internal.account.Account;
 import rewards.internal.account.AccountRepository;
+import rewards.internal.restaurant.Restaurant;
 import rewards.internal.restaurant.RestaurantRepository;
 import rewards.internal.reward.RewardRepository;
 
 /**
  * Rewards an Account for Dining at a Restaurant.
- * 
+ *
  * The sole Reward Network implementation. This object is an application-layer service responsible for coordinating with
  * the domain-layer to carry out the process of rewarding benefits to accounts for dining.
- * 
+ *
  * Said in other words, this class implements the "reward account for dining" use case.
  *
  * TODO-00: In this lab, you are going to exercise the following:
@@ -52,7 +56,13 @@ public class RewardNetworkImpl implements RewardNetwork {
 	public RewardConfirmation rewardAccountFor(Dining dining) {
 		// TODO-07: Write code here for rewarding an account according to
 		//          the sequence diagram in the lab document
+		Account rewardAccount = accountRepository.findByCreditCard(dining.getCreditCardNumber());
+		Restaurant restaurant = restaurantRepository.findByMerchantNumber(dining.getMerchantNumber());
+		MonetaryAmount benefit = restaurant.calculateBenefitFor(rewardAccount, dining);
+		AccountContribution contribution = rewardAccount.makeContribution(benefit);
+		accountRepository.updateBeneficiaries(rewardAccount);
+
 		// TODO-08: Return the corresponding reward confirmation
-		return null;
+		return rewardRepository.confirmReward(contribution, dining);
 	}
 }

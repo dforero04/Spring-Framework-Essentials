@@ -19,7 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  * Configures the implementation with stub repositories
  * containing dummy data for fast in-memory testing without
  * the overhead of an external data source.
- * 
+ *
  * Besides helping catch bugs early, tests are a great way
  * for a new developer to learn an API as he or she can see the
  * API in action. Tests also help validate a design as they
@@ -41,7 +41,7 @@ public class RewardNetworkImplTests {
 		RestaurantRepository restaurantRepo = new StubRestaurantRepository();
 		RewardRepository rewardRepo = new StubRewardRepository();
 
-		// Setup the object being tested by handing what it needs to work
+		// Set up the object being tested by handing what it needs to work
 		rewardNetwork = new RewardNetworkImpl(accountRepo, restaurantRepo, rewardRepo);
 	}
 
