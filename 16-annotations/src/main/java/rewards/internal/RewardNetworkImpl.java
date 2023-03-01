@@ -1,5 +1,7 @@
 package rewards.internal;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import rewards.AccountContribution;
 import rewards.Dining;
 import rewards.RewardConfirmation;
@@ -14,12 +16,12 @@ import common.money.MonetaryAmount;
 
 /**
  * Rewards an Account for Dining at a Restaurant.
- * 
+ *
  * The sole Reward Network implementation. This class is an
  * application-layer service responsible for coordinating with
  * the domain-layer to carry out the process of rewarding benefits
  * to accounts for dining.
- * 
+ *
  * Said in other words, this class implements the "reward account
  * for dining" use case.
  */
@@ -31,13 +33,14 @@ import common.money.MonetaryAmount;
  *   injection or constructor injection.
  */
 
+@Service
 public class RewardNetworkImpl implements RewardNetwork {
 
-	private AccountRepository accountRepository;
+	AccountRepository accountRepository;
 
-	private RestaurantRepository restaurantRepository;
+	RestaurantRepository restaurantRepository;
 
-	private RewardRepository rewardRepository;
+	RewardRepository rewardRepository;
 
 	/**
 	 * Creates a new reward network.
@@ -45,7 +48,8 @@ public class RewardNetworkImpl implements RewardNetwork {
 	 * @param restaurantRepository the repository for loading restaurants that determine how much to reward
 	 * @param rewardRepository the repository for recording a record of successful reward transactions
 	 */
-	
+
+	@Autowired
 	public RewardNetworkImpl(AccountRepository accountRepository, RestaurantRepository restaurantRepository,
 			RewardRepository rewardRepository) {
 		this.accountRepository = accountRepository;

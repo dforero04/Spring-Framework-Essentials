@@ -1,8 +1,12 @@
 package rewards.internal.restaurant;
 
 import common.money.Percentage;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.stereotype.Repository;
 
+import javax.annotation.PostConstruct;
+import javax.annotation.PreDestroy;
 import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -44,6 +48,7 @@ import java.util.Map;
  *   We will fix this error in the next step.
  */
 
+@Repository
 public class JdbcRestaurantRepository implements RestaurantRepository {
 
 	private DataSource dataSource;
@@ -60,14 +65,30 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
 	 * Restaurant cache is populated for read only access
 	 */
 
+	/*
+		Autowired should be used on this constructor because the populateRestaurantCache() method needs the dependency
+		of DataSource in order to work. This would be an example of Constructor Injection.
+	*/
 	public JdbcRestaurantRepository(DataSource dataSource) {
 		this.dataSource = dataSource;
-		this.populateRestaurantCache();
+//		this.populateRestaurantCache();
 	}
 
+	/*
+		This default constructor will be used if the @Autowired annotation is missing from either constructor.
+		Therefore, we must move the @Autowired annotation to the setter, setDataSource, in order for the dependency
+		to be injected properly. This is an example of Setter Injection.
+
+		Also, in order for this Setter Injection to work properly, we must allow the populateRestaurantCache() method
+		to be called when the bean is constructed.
+
+		- Note that populating the cache is not really a valid construction activity, so using a post-construct,
+		 rather than the constructor, is a better practice.
+	 */
 	public JdbcRestaurantRepository() {
 	}
 
+	@Autowired
 	public void setDataSource(DataSource dataSource) {
 		this.dataSource = dataSource;
 	}
@@ -87,11 +108,9 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
 	 * - Mark this method with an annotation that will cause it to be
 	 *   executed by Spring after constructor & setter initialization has occurred.
 	 * - Re-run the RewardNetworkTests test. You should see the test succeeds.
-	 * - Note that populating the cache is not really a valid
-	 *   construction activity, so using a post-construct, rather than
-	 *   the constructor, is a better practice.
 	 */
 
+	@PostConstruct
 	void populateRestaurantCache() {
 		restaurantCache = new HashMap<String, Restaurant>();
 		String sql = "select MERCHANT_NUMBER, NAME, BENEFIT_PERCENTAGE from T_RESTAURANT";
@@ -166,7 +185,10 @@ public class JdbcRestaurantRepository implements RestaurantRepository {
 	 * - Re-run the test and you should be able to see
 	 *   that this method is now being called.
 	 */
+
+	@PreDestroy
 	public void clearRestaurantCache() {
+		System.out.println("I, clearRestaurantCache, am being called");
 		restaurantCache.clear();
 	}
 
