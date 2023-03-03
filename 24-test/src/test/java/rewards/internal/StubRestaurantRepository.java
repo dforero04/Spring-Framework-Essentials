@@ -5,8 +5,10 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import org.springframework.stereotype.Repository;
 import rewards.internal.restaurant.Restaurant;
 import rewards.internal.restaurant.RestaurantRepository;
 
@@ -16,12 +18,15 @@ import common.money.Percentage;
  * A dummy restaurant repository implementation. Has a single restaurant
  * "Apple Bees" with a 8% benefit availability percentage that's always
  * available.
- * 
+ *
  * Stubs facilitate unit testing. An object needing a RestaurantRepository can
  * work with this stub and not have to bring in expensive and/or complex
  * dependencies such as a Database. Simple unit tests can then verify object
  * behavior by considering the state of this stub.
  */
+@Repository
+// This profile is needed to differentiate between the actual JDBC Repos.
+@Profile("stub")
 public class StubRestaurantRepository implements RestaurantRepository {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());

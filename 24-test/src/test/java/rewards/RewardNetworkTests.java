@@ -1,12 +1,19 @@
 package rewards;
 
 import common.money.MonetaryAmount;
+import config.RewardsConfig;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Import;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -78,38 +85,56 @@ import static org.junit.jupiter.api.Assertions.*;
 /* TODO-08 (Optional): Create an inner static class from TestInfrastructureConfig
  * - Once inner static class is created, remove configuration
  *   class reference to TestInfrastructureConfig class from the annotation
- *   you added to this class in TO DO-01 above. (For more detailed on, refer tp
+ *   you added to this class in TO DO-01 above. (For more detailed on, refer to
  *   lab document.)
  * - Run the test again.
  */
 
+/*
+	With this annotation, you no longer need to specify any AppContext in the @BeforeEach. It is now in the annotation.
+
+	In addition, the performance of your system test has potentially improved as the ApplicationContext is now created
+	once per test case run (and cached) instead of once per test method. This test has only one method, so it does not
+	make any difference here, however.
+*/
+/*
+	When no class is specified in this annotation, Spring’s test framework will look for an inner static class
+	marked with @Configuration.
+ */
+//@SpringJUnitConfig()
+@SpringJUnitConfig(classes=TestInfrastructureConfig.class)
+// Used to specify which @Profiles will be used
+//@ActiveProfiles("stub")
+@ActiveProfiles({"local", "jdbc"})
+//@ActiveProfiles({"jndi", "jdbc"})
+//**THIS ONE IS NOT WORKING, FOR SOME REASON**
 public class RewardNetworkTests {
 
-	
+	/*
+	//Uncomment out this code block to use the static inner class for the test configuration
+
+	@Configuration
+	@Import({
+			TestInfrastructureLocalConfig.class,
+			TestInfrastructureJndiConfig.class,
+			RewardsConfig.class })
+	static class TestInfrastructureConfig {
+
+
+	// The bean logging post-processor from the bean lifecycle slides.
+
+	@Bean
+	public static LoggingBeanPostProcessor loggingBean(){
+		return new LoggingBeanPostProcessor();
+	}
+}
+	 */
+
 	/**
 	 * The object being tested.
 	 */
+	@Autowired
 	private RewardNetwork rewardNetwork;
-
-	/**
-	 * Need this to enable clean shutdown at the end of the application
-	 */
-	private ConfigurableApplicationContext context;
-
-	@BeforeEach
-	public void setUp() {
-		// Create the test configuration for the application from one file
-		context = SpringApplication.run(TestInfrastructureConfig.class);
-		// Get the bean to use to invoke the application
-		rewardNetwork = context.getBean(RewardNetwork.class);
-	}
-
-	@AfterEach
-	public void tearDown() throws Exception {
-		// simulate the Spring bean destruction lifecycle:
-		if (context != null)
-			context.close();
-	}
 
 	@Test
 	@DisplayName("Test if reward computation and distribution works")

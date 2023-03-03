@@ -5,8 +5,10 @@ import java.util.Map;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.dao.EmptyResultDataAccessException;
 
+import org.springframework.stereotype.Repository;
 import rewards.internal.account.Account;
 import rewards.internal.account.AccountRepository;
 
@@ -16,12 +18,15 @@ import common.money.Percentage;
  * A dummy account repository implementation. Has a single Account
  * "Keith and Keri Donald" with two beneficiaries "Annabelle" (50% allocation)
  * and "Corgan" (50% allocation) associated with credit card "1234123412341234".
- * 
+ *
  * Stubs facilitate unit testing. An object needing an AccountRepository can
  * work with this stub and not have to bring in expensive and/or complex
  * dependencies such as a Database. Simple unit tests can then verify object
  * behavior by considering the state of this stub.
  */
+@Repository
+// This profile is needed to differentiate between the actual JDBC Repos.
+@Profile("stub")
 public class StubAccountRepository implements AccountRepository {
 
 	private final Logger logger = LoggerFactory.getLogger(getClass());
