@@ -22,6 +22,9 @@ import rewards.internal.monitor.MonitorFactory;
 //    where `MonitorFactory` dependency is being injected.
 //    (It is optional since there is only a single constructor in the class.)
 
+/*
+	Both the @Aspect and @Component annotations are required for an Aspect to be applied to the Application Context.
+ */
 @Aspect
 @Component
 public class LoggingAspect {
@@ -31,6 +34,9 @@ public class LoggingAspect {
 	private Logger logger = LoggerFactory.getLogger(getClass());
 	private MonitorFactory monitorFactory;
 
+	/*
+		Autowired not required since there is only one constructor
+	 */
 	@Autowired
 	public LoggingAspect(MonitorFactory monitorFactory) {
 		super();
@@ -64,8 +70,10 @@ public class LoggingAspect {
 		try {
 			// Invoke repository method ...
 			//  TODO-08: Add the logic to proceed with the target method invocation.
-			//  - Be sure to return the target method's return value to the caller
-			//    and delete the line below.
+			/*
+				If the repositoryMethod returns successfully, it will return the value of the update to the caller.
+				The proceed() method will conduct the repository method.
+			 */
 			return repositoryMethod.proceed();
 
 		} finally {
