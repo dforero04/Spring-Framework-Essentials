@@ -1,17 +1,9 @@
 package rewards;
 
 import common.money.MonetaryAmount;
-import config.RewardsConfig;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.SpringApplication;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 
@@ -104,10 +96,11 @@ import static org.junit.jupiter.api.Assertions.*;
 //@SpringJUnitConfig()
 @SpringJUnitConfig(classes=TestInfrastructureConfig.class)
 // Used to specify which @Profiles will be used
-//@ActiveProfiles("stub")
-@ActiveProfiles({"local", "jdbc"})
-//@ActiveProfiles({"jndi", "jdbc"})
+@ActiveProfiles("stub")
+//@ActiveProfiles({"local", "jdbc"})
 //**THIS ONE IS NOT WORKING, FOR SOME REASON**
+//**NEED TO DOWN org.osjava.sj.SimpleContextFactory JAR FILE**
+//@ActiveProfiles({"jndi", "jdbc"})
 public class RewardNetworkTests {
 
 	/*
