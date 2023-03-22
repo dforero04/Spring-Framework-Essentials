@@ -47,10 +47,14 @@ public class JdbcRewardRepository implements RewardRepository {
 	}
 
 	public RewardConfirmation confirmReward(AccountContribution contribution, Dining dining) {
-		String sql = "insert into T_REWARD (CONFIRMATION_NUMBER, REWARD_AMOUNT, REWARD_DATE, ACCOUNT_NUMBER, DINING_MERCHANT_NUMBER, DINING_DATE, DINING_AMOUNT) values (?, ?, ?, ?, ?, ?, ?)";
+		String sql = "insert into T_REWARD (CONFIRMATION_NUMBER, REWARD_AMOUNT, REWARD_DATE, ACCOUNT_NUMBER, " +
+				"DINING_MERCHANT_NUMBER, DINING_DATE, DINING_AMOUNT) values (?, ?, ?, ?, ?, ?, ?)";
 		String confirmationNumber = nextConfirmationNumber();
 
-		jdbcTemplate.update(sql, confirmationNumber, contribution.getAmount().asBigDecimal(), new Date(SimpleDate.today().inMilliseconds()), contribution.getAccountNumber(), dining.getMerchantNumber(), new Date(dining.getDate().inMilliseconds()), dining.getAmount().asBigDecimal());
+		jdbcTemplate.update(sql, confirmationNumber,
+				contribution.getAmount().asBigDecimal(), new Date(SimpleDate.today().inMilliseconds()),
+				contribution.getAccountNumber(), dining.getMerchantNumber(),
+				new Date(dining.getDate().inMilliseconds()), dining.getAmount().asBigDecimal());
 
 		// Update the T_REWARD table with the new Reward
 		try (Connection conn = dataSource.getConnection();
