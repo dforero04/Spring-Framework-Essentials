@@ -23,7 +23,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 /**
  * Tests the JDBC reward repository with a test data source to verify
  * data access and relational-to-object mapping behavior works as expected.
- *
+ * <p>
  * TODO-00: In this lab, you are going to exercise the following:
  * - Refactoring cumbersome low-level JDBC code to leverage Spring's JdbcTemplate
  * - Using various query methods of JdbcTemplate for retrieving data
@@ -76,6 +76,8 @@ public class JdbcRewardRepositoryTests {
 		//
 		String sql = "SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?";
 		String id = confirmation.getConfirmationNumber();
+
+		/* Here we use queryForMap() because we are getting multiple columns for a specific row */
 		Map<String, Object> values = jdbcTemplate.queryForMap(sql, id);
 		verifyInsertedValues(confirmation, dining, values);
 	}
@@ -94,14 +96,16 @@ public class JdbcRewardRepositoryTests {
 		// TODO-01: Use JdbcTemplate to query for the number of rows in the T_REWARD table
 		// - Use "SELECT count(*) FROM T_REWARD" as SQL statement
 		String sql = "SELECT count(*) FROM T_REWARD";
+
+		/* Here we use queryforObject() because we only want a single value back (e.g. a count) */
 		return jdbcTemplate.queryForObject(sql, Integer.class);
 	}
 
 	private DataSource createTestDataSource() {
 		return new EmbeddedDatabaseBuilder()
-			.setName("rewards")
-			.addScript("/rewards/testdb/schema.sql")
-			.addScript("/rewards/testdb/data.sql")
-			.build();
+				.setName("rewards")
+				.addScript("/rewards/testdb/schema.sql")
+				.addScript("/rewards/testdb/data.sql")
+				.build();
 	}
 }
