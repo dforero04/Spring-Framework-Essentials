@@ -33,9 +33,8 @@ public class JdbcAccountRepository implements AccountRepository {
 
     private JdbcTemplate jdbcTemplate;
 
-    public JdbcAccountRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    public JdbcAccountRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     // TODO-07 (Optional): Refactor this method using JdbcTemplate and ResultSetExtractor
@@ -59,8 +58,8 @@ public class JdbcAccountRepository implements AccountRepository {
 		 - the ResultSetExtractor interface has one method, extractData(), that takes in a ResultSet and returns an
 		 	Object
 		 - our mapAccount() method is used as the callback for our ResultSetExtractor, so we pass that in as the
-		 second argument of query(). This method will take care of all of the mapping needed to return an Account
-		 object
+		    second argument of query(). This method will take care of all of the mapping needed to return an Account
+		    object
 		 */
         return jdbcTemplate.query(sql, this::mapAccount, creditCardNumber);
 

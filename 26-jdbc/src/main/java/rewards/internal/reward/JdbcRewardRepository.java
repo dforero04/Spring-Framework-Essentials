@@ -37,13 +37,16 @@ import java.sql.*;
 
 public class JdbcRewardRepository implements RewardRepository {
 
-    private final DataSource dataSource;
-
     private final JdbcTemplate jdbcTemplate;
 
-    public JdbcRewardRepository(DataSource dataSource) {
-        this.dataSource = dataSource;
-        jdbcTemplate = new JdbcTemplate(dataSource);
+    /* This constructor will be used if we do not initialize the jdbcTemplate in the RewardsConfig class */
+//    public JdbcRewardRepository(DataSource dataSource) {
+//        this.dataSource = dataSource;
+//        jdbcTemplate = new JdbcTemplate(dataSource);
+//    }
+
+    public JdbcRewardRepository(JdbcTemplate jdbcTemplate) {
+        this.jdbcTemplate = jdbcTemplate;
     }
 
     public RewardConfirmation confirmReward(AccountContribution contribution, Dining dining) {

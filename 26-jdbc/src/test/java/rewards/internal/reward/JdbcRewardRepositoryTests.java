@@ -33,79 +33,79 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
  */
 public class JdbcRewardRepositoryTests {
 
-	private JdbcRewardRepository repository;
+    private JdbcRewardRepository repository;
 
-	private DataSource dataSource;
+    private DataSource dataSource;
 
-	private JdbcTemplate jdbcTemplate;
+    private JdbcTemplate jdbcTemplate;
 
-	@BeforeEach
-	public void setUp() throws Exception {
-		dataSource = createTestDataSource();
-		repository = new JdbcRewardRepository(dataSource);
-		jdbcTemplate = new JdbcTemplate(dataSource);
-	}
+    @BeforeEach
+    public void setUp() throws Exception {
+        dataSource = createTestDataSource();
+        jdbcTemplate = new JdbcTemplate(dataSource);
+        repository = new JdbcRewardRepository(jdbcTemplate);
+    }
 
-	@Test
-	public void testCreateReward() throws SQLException {
-		Dining dining = Dining.createDining("100.00", "1234123412341234", "0123456789");
+    @Test
+    public void testCreateReward() throws SQLException {
+        Dining dining = Dining.createDining("100.00", "1234123412341234", "0123456789");
 
-		Account account = new Account("1", "Keith and Keri Donald");
-		account.setEntityId(0L);
-		account.addBeneficiary("Annabelle", Percentage.valueOf("50%"));
-		account.addBeneficiary("Corgan", Percentage.valueOf("50%"));
+        Account account = new Account("1", "Keith and Keri Donald");
+        account.setEntityId(0L);
+        account.addBeneficiary("Annabelle", Percentage.valueOf("50%"));
+        account.addBeneficiary("Corgan", Percentage.valueOf("50%"));
 
-		AccountContribution contribution = account.makeContribution(MonetaryAmount.valueOf("8.00"));
-		RewardConfirmation confirmation = repository.confirmReward(contribution, dining);
-		assertNotNull(confirmation, "confirmation should not be null");
-		assertNotNull(confirmation.getConfirmationNumber(), "confirmation number should not be null");
-		assertEquals(contribution, confirmation.getAccountContribution(), "wrong contribution object");
-		verifyRewardInserted(confirmation, dining);
-	}
+        AccountContribution contribution = account.makeContribution(MonetaryAmount.valueOf("8.00"));
+        RewardConfirmation confirmation = repository.confirmReward(contribution, dining);
+        assertNotNull(confirmation, "confirmation should not be null");
+        assertNotNull(confirmation.getConfirmationNumber(), "confirmation number should not be null");
+        assertEquals(contribution, confirmation.getAccountContribution(), "wrong contribution object");
+        verifyRewardInserted(confirmation, dining);
+    }
 
-	private void verifyRewardInserted(RewardConfirmation confirmation, Dining dining) throws SQLException {
-		assertEquals(1, getRewardCount());
+    private void verifyRewardInserted(RewardConfirmation confirmation, Dining dining) throws SQLException {
+        assertEquals(1, getRewardCount());
 
-		//	TODO-02: Use JdbcTemplate to query for a map of all column values
-		//	of a row in the T_REWARD table based on the confirmationNumber.
-		//  - Use "SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?" as SQL statement
-		//	- After making the changes, execute this test class to verify
-		//	  its successful execution.
-		//	  (If you are using Gradle, comment out the test exclude in
-		//    the build.gradle file.)
-		//
-		String sql = "SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?";
-		String id = confirmation.getConfirmationNumber();
+        //	TODO-02: Use JdbcTemplate to query for a map of all column values
+        //	of a row in the T_REWARD table based on the confirmationNumber.
+        //  - Use "SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?" as SQL statement
+        //	- After making the changes, execute this test class to verify
+        //	  its successful execution.
+        //	  (If you are using Gradle, comment out the test exclude in
+        //    the build.gradle file.)
+        //
+        String sql = "SELECT * FROM T_REWARD WHERE CONFIRMATION_NUMBER = ?";
+        String id = confirmation.getConfirmationNumber();
 
-		/* Here we use queryForMap() because we are getting multiple columns for a specific row */
-		Map<String, Object> values = jdbcTemplate.queryForMap(sql, id);
-		verifyInsertedValues(confirmation, dining, values);
-	}
+        /* Here we use queryForMap() because we are getting multiple columns for a specific row */
+        Map<String, Object> values = jdbcTemplate.queryForMap(sql, id);
+        verifyInsertedValues(confirmation, dining, values);
+    }
 
-	private void verifyInsertedValues(RewardConfirmation confirmation, Dining dining, Map<String, Object> values) {
-		assertEquals(confirmation.getAccountContribution().getAmount(), new MonetaryAmount((BigDecimal) values
-				.get("REWARD_AMOUNT")));
-		assertEquals(SimpleDate.today().asDate(), values.get("REWARD_DATE"));
-		assertEquals(confirmation.getAccountContribution().getAccountNumber(), values.get("ACCOUNT_NUMBER"));
-		assertEquals(dining.getAmount(), new MonetaryAmount((BigDecimal) values.get("DINING_AMOUNT")));
-		assertEquals(dining.getMerchantNumber(), values.get("DINING_MERCHANT_NUMBER"));
-		assertEquals(SimpleDate.today().asDate(), values.get("DINING_DATE"));
-	}
+    private void verifyInsertedValues(RewardConfirmation confirmation, Dining dining, Map<String, Object> values) {
+        assertEquals(confirmation.getAccountContribution().getAmount(), new MonetaryAmount((BigDecimal) values
+                .get("REWARD_AMOUNT")));
+        assertEquals(SimpleDate.today().asDate(), values.get("REWARD_DATE"));
+        assertEquals(confirmation.getAccountContribution().getAccountNumber(), values.get("ACCOUNT_NUMBER"));
+        assertEquals(dining.getAmount(), new MonetaryAmount((BigDecimal) values.get("DINING_AMOUNT")));
+        assertEquals(dining.getMerchantNumber(), values.get("DINING_MERCHANT_NUMBER"));
+        assertEquals(SimpleDate.today().asDate(), values.get("DINING_DATE"));
+    }
 
-	private int getRewardCount() throws SQLException {
-		// TODO-01: Use JdbcTemplate to query for the number of rows in the T_REWARD table
-		// - Use "SELECT count(*) FROM T_REWARD" as SQL statement
-		String sql = "SELECT count(*) FROM T_REWARD";
+    private int getRewardCount() throws SQLException {
+        // TODO-01: Use JdbcTemplate to query for the number of rows in the T_REWARD table
+        // - Use "SELECT count(*) FROM T_REWARD" as SQL statement
+        String sql = "SELECT count(*) FROM T_REWARD";
 
-		/* Here we use queryforObject() because we only want a single value back (e.g. a count) */
-		return jdbcTemplate.queryForObject(sql, Integer.class);
-	}
+        /* Here we use queryforObject() because we only want a single value back (e.g. a count) */
+        return jdbcTemplate.queryForObject(sql, Integer.class);
+    }
 
-	private DataSource createTestDataSource() {
-		return new EmbeddedDatabaseBuilder()
-				.setName("rewards")
-				.addScript("/rewards/testdb/schema.sql")
-				.addScript("/rewards/testdb/data.sql")
-				.build();
-	}
+    private DataSource createTestDataSource() {
+        return new EmbeddedDatabaseBuilder()
+                .setName("rewards")
+                .addScript("/rewards/testdb/schema.sql")
+                .addScript("/rewards/testdb/data.sql")
+                .build();
+    }
 }
