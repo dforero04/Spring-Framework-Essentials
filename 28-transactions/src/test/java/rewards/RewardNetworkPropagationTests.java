@@ -30,9 +30,21 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 // TODO-07: Re-run this test, it should now pass.
 // - Think about why this test passes now.
+/*
+ * This test now passes after providing Propagation.REQUIRES_NEW attribute in the @Transactional annotation on the
+ *  rewardAccountFor method in RewardNetworkImpl.java
+ *
+ * Before Propagation.REQUIRES_NEW:
+ * The transaction opened on Line 69 will rollback manually on Line 77. Then, the following assertions will FAIL
+ * because the transaction was rolled back
+ *
+ * After Propagation.REQUIRES_NEW
+ * With this attribute, the second @Transactional annotation will open a transaction and commit the changes from
+ * that transaction, and then go back to the first transaction.
+ * */
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = { SystemTestConfig.class })
+@ContextConfiguration(classes = {SystemTestConfig.class})
 public class RewardNetworkPropagationTests {
 
 	/**
