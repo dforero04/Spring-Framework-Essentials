@@ -13,6 +13,14 @@ public class JdbcBootApplication {
         SpringApplication.run(JdbcBootApplication.class, args);
     }
 
+    /*
+    This bean will be run after the initialization of the Application Context.
+
+    Functional interface used to indicate that a bean should run when it is contained within a SpringApplication.
+    Multiple CommandLineRunner beans can be defined within the same application context and can be ordered using the
+    Ordered interface or @Order annotation. If you need access to ApplicationArguments instead of the raw String
+    array consider using ApplicationRunner.
+     */
     @Bean
     CommandLineRunner commandLineRunner(JdbcTemplate jdbcTemplate) {
 
