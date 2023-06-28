@@ -4,9 +4,7 @@
   <component name="GradleSettings">
     <option name="linkedExternalProjectsSettings">
       <GradleProjectSettings>
-        <option name="delegatedBuild" value="true" />
         <option name="testRunner" value="PLATFORM" />
-        <option name="distributionType" value="DEFAULT_WRAPPED" />
         <option name="externalProjectPath" value="$PROJECT_DIR$" />
         <option name="modules">
           <set>
@@ -42,6 +40,14 @@
             <option value="$PROJECT_DIR$/42-security-rest-solution" />
             <option value="$PROJECT_DIR$/44-actuator" />
             <option value="$PROJECT_DIR$/44-actuator-solution" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/30-jdbc-boot" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/30-jdbc-boot" />
           </set>
         </option>
       </GradleProjectSettings>
