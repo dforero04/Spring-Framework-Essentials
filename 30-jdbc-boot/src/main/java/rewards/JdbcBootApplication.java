@@ -1,4 +1,4 @@
-package io.spring.training.boot.jdbcboot;
+package rewards;
 
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;

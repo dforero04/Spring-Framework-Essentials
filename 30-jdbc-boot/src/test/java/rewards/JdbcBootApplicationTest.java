@@ -1,4 +1,4 @@
-package io.spring.training.boot.jdbcboot;
+package rewards;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +8,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import static org.assertj.core.api.Assertions.*;
 
 @SpringBootTest
-public class JdbcBootApplicationTests {
+public class JdbcBootApplicationTest {
     public static final String QUERY = "SELECT count(*) FROM T_ACCOUNT";
 
     @Autowired
